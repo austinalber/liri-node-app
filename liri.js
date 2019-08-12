@@ -10,7 +10,6 @@ var spotify = new Spotify(keys.spotify);
 var moment = require('moment');
 var axios = require('axios');
 var fs = require("fs");
-var request = require("request");
 
 // User Inputs
 var method = process.argv[2];
@@ -39,15 +38,18 @@ switch(method) {
         doWhatItSays();
     break;
 
-    // If no Method is Selected
+    // If no method is selected, display error to user and show potential methods
     default:
-        console.log("Incorrect selection.");
+        console.log(
+            "\nIncorrect selection. Please choose from one of the following methods:\n" + 
+            "\n*  concert-this" + "\n*  spotify-this-song" + "\n*  movie-this" + "\n*  do-what-it-says\n");
 }
 
 // Functions
 function concertThis(userInput) {
     // Use axios to retrieve bandsintown URL
     axios.get("https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp")
+
     .then(function(response) {
         // For loops to go through all possible entries from response
         for(var i = 0; i < response.data.length; i++) {
@@ -72,19 +74,22 @@ function spotifyThisSong(userInput) {
     // If no userInput is detected, use default song
     if(!userInput) {
         userInput = "The Sign";
+        console.log("\nNo 'user input' detected. Displaying default song: 'The Sign'\n");
     }
     spotify.search({
         type: "track",
         query: userInput
     }).then(function(response) {
         // For loops to go through all possible entries from response
-        console.log(response.tracks);
-        for(var i = 0; i < 5; i++) {
+        for(var i = 0; i < 3; i++) {
             // Display song information to terminal
-            // console.log(
-            //     "--------------------" +
-            //     "Artist(s): " + 
-            // );
+            console.log(
+                "--------------------" +
+                "\nArtist(s): " + response.tracks.items[i].artists[0].name +
+                "\nSong name: " + response.tracks.items[i].name +
+                "\nLink to song: " + response.tracks.items[i].preview_url +
+                "\nAlbum: " + response.tracks.items[i].album.name + "\n"
+            );
         }
     // If spotify search fails, display error
     }).catch(function(error) {
@@ -93,9 +98,57 @@ function spotifyThisSong(userInput) {
 }
 
 function movieThis(userInput) {
+    // If no userInput is detected, use default song
+    if(!userInput) {
+        userInput = "Mr. Nobody";
+        console.log("\nNo 'user input' detected. Displaying default movie: 'Mr. Nobody'\n");
+    }
 
+    // Use axios to retrieve bandsintown URL
+    axios.get("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy")
+    .then(function(response) {
+        // Display information to terminal
+        console.log(
+            "--------------------" +
+            "\nMovie Title: " + response.data.Title +
+            "\nRelease Year: " + response.data.Year +
+            "\nIMDB rating: " + response.data.imdbRating +
+            "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value +
+            "\nCountry Produced in: " + response.data.Country +
+            "\nLanguage: " + response.data.Language + 
+            "\nMovie Plot: " + response.data.Plot +
+            "\nActors in Movie: " + response.data.Actors);
+    })
+    // Print error if axios grab is unsuccessful
+    .catch(function(error) {
+        console.log(error);
+    });
 }
 
 function doWhatItSays() {
+    // Use fs to read 'random.txt' and retieve data as a string
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if(error) {
+            return console.log(error);
+        }
+        // Split the data retrieved from 'random.txt' into an array
+        var dataArr = data.split(',');
 
+        // Switch statement to determine method from 'random.txt'
+        switch(dataArr[0]) {
+            case "concert-this":
+                concertThis("Rock");
+            break;
+            case "spotify-this-song":
+                spotifyThisSong(dataArr[1]);
+            break;
+            case "movie-this":
+                movieThis();
+            break;
+            default:
+                console.log("\nNo method detected from 'random.txt' file.\n")
+        }
+        spotifyThisSong(dataArr[0], dataArr[1]);
+    })
 }
+
