@@ -81,7 +81,7 @@ function movieThis(userInput) {
     }
 
     // Use axios to retrieve bandsintown URL
-    axios.get("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy")
+    axios.get("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=d73630a")
     .then(function(response) {
         // Display information to terminal
         console.log(
