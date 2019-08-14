@@ -76,12 +76,12 @@ function spotifyThisSong(userInput) {
 function movieThis(userInput) {
     // If no userInput is detected, use default song
     if(!userInput) {
-        userInput = "Mr. Nobody";
+        userInput = "Mr.Nobody";
         console.log("\nNo 'user input' detected. Displaying default movie: 'Mr. Nobody'\n");
     }
 
     // Use axios to retrieve bandsintown URL
-    axios.get("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=d73630a")
+    axios.get("https://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy")
     .then(function(response) {
         // Display information to terminal
         console.log(
@@ -109,6 +109,7 @@ function doWhatItSays() {
         }
         // Split the data retrieved from 'random.txt' into an array
         var dataArr = data.split(',');
+        inputCheck()
 
         // Switch statement to determine method from 'random.txt'
         switch(dataArr[0]) {

@@ -25,13 +25,18 @@ Following the method input, the user must enter value that cooresponds to the me
 
 ## Resources
 
-### Videos
+### Images
+
+* [Concert This](./images/concert-this.png)
+* [Do What It Says](./images/do-what-it-says.png)
+* [Movie This](./images/movie-this.png)
+* [Spotify This Song](./images/spoitfy-this.png)
 
 
 
-### GitHub
+### GitHub Repository
 
-GitHub Repository Link: https://github.com/austinalber/liri-node-app
+* https://github.com/austinalber/liri-node-app
 
 ### Technologies Utilized
 
